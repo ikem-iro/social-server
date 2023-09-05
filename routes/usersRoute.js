@@ -8,15 +8,15 @@ const { getUser, getUserFriends, addRemoveFriend } = require('../controllers/use
 const verifyToken = require('../middleware/authenticator');
 
 
-router.route("/:id")
+router.route("/users/:id")
 .get(verifyToken, getUser)
 
 
-router.route("/:id/friends")
+router.route("/users/:id/friends")
 .get(verifyToken, getUserFriends)
 
 
-router.route("/:id/:friendId")
+router.route("/users/:id/:friendId")
 .patch(verifyToken, addRemoveFriend)
 
 

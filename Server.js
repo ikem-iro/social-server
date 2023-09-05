@@ -1,13 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const colors = require("colors");
 const multer = require("multer");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const path = require("path");
-const { fileURLToPath } = require("url");
 const connectDB = require("./dbConfig/db");
 const errorHandler = require("./middleware/errorHandler");
 const { register } = require("./controllers/auth");
@@ -22,12 +20,11 @@ const app = express();
 const port = process.env.PORT || 5001;
 connectDB();
 
-app.use(express.json());
+app.use(express.json({ limit: "30mb", extended: true }));
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
@@ -43,11 +40,12 @@ const storage = multer.diskStorage({
     cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
+    console.log(file)
     cb(null, file.originalname);
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
