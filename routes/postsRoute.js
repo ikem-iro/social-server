@@ -5,16 +5,16 @@ const { getFeedPosts, getUserPosts, likePost } = require('../controllers/posts')
 
 
 
-router.route('/')
+router.route('/posts')
 .get(verifyToken, getFeedPosts)
 
 
-router.route('/:userId/posts')
+router.route('/posts/:userId/posts')
 .get(verifyToken, getUserPosts)
 
 
 
-router.route("/:id/like")
+router.route("/posts/:id/like")
 .patch(verifyToken, likePost)
 
 
